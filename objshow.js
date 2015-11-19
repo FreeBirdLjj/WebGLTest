@@ -1,4 +1,4 @@
-var camera, scene, light, renderer;
+var camera, cameraHelper, scene, light, renderer;
 var container;
 var geometry;
 var textureImage;
@@ -96,9 +96,6 @@ function init()
 {
 	container = document.getElementById('container');
 
-	camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
-	camera.position.set(0, 0, 3);
-
 	scene = new THREE.Scene();
 
 	renderer = new THREE.WebGLRenderer();
@@ -108,10 +105,18 @@ function init()
 	light = new THREE.DirectionalLight(0xffffff);
 	scene.add(light);
 
-
 	var textureLoader = new THREE.TextureLoader();
 
 	textureImage = textureLoader.load("./5.jpg", function(textureImage) {
+
+		var h = textureImage.image.height / textureImage.image.width;
+		var aspect = window.innerHeight / window.innerWidth;
+
+		var widthDelta = Math.max(1.0, h / aspect);
+		var heightDelta = Math.max(aspect, h);
+
+		camera = new THREE.OrthographicCamera((1.0 - widthDelta) / 2.0, (1.0 + widthDelta) / 2.0, (heightDelta + h) / 2.0, (heightDelta - h) / 2.0, -1, 1);
+		cameraOrthoHelper = new THREE.CameraHelper(camera);
 
 		var material = new THREE.MeshBasicMaterial({ map: textureImage });
 
@@ -120,7 +125,7 @@ function init()
 		geometry.dynamic = true;
 
 		for (var i = 0, il = vertices.length; i < il; i++) {
-			geometry.vertices.push(new THREE.Vector3(vertices[i][0], textureImage.image.height / textureImage.image.width * vertices[i][1], 0.0));
+			geometry.vertices.push(new THREE.Vector3(vertices[i][0], h * vertices[i][1], 0.0));
 		}
 
 		for (var i = 0, il = faces.length; i < il; i++) {
@@ -154,7 +159,14 @@ function init()
 
 function onWindowResize()
 {
-	camera.aspect = window.innerWidth / window.innerHeight;
+	var h = textureImage.image.height / textureImage.image.width;
+	var aspect = window.innerHeight / window.innerWidth;
+
+	var widthDelta = Math.max(1.0, h / aspect);
+	var heightDelta = Math.max(aspect, h);
+
+	camera = new THREE.OrthographicCamera((1.0 - widthDelta) / 2.0, (1.0 + widthDelta) / 2.0, (heightDelta + h) / 2.0, (heightDelta - h) / 2.0, -1, 1);
+	cameraOrthoHelper = new THREE.CameraHelper(camera);
 	camera.updateProjectionMatrix();
 
 	renderer.setSize(window.innerWidth, window.innerHeight);
