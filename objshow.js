@@ -165,7 +165,7 @@ function onWindowResize()
 	var widthDelta = Math.max(1.0, h / aspect);
 	var heightDelta = Math.max(aspect, h);
 
-	camera = new THREE.OrthographicCamera((1.0 - widthDelta) / 2.0, (1.0 + widthDelta) / 2.0, (heightDelta + h) / 2.0, (heightDelta - h) / 2.0, -1, 1);
+	camera = new THREE.OrthographicCamera((1.0 - widthDelta) / 2.0, (1.0 + widthDelta) / 2.0, (h + heightDelta) / 2.0, (h - heightDelta) / 2.0, -1, 1);
 	cameraOrthoHelper = new THREE.CameraHelper(camera);
 	camera.updateProjectionMatrix();
 
