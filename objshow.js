@@ -165,7 +165,7 @@ function onWindowResize() {
 function animate() {
 	requestAnimationFrame(animate);
 
-	frame += 1;
+	frame++;
 
 	if (frame >= tests.length) {
 		frame = 0;
