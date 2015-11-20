@@ -128,12 +128,8 @@ function init() {
 
 		for (var i = 0, il = faces.length; i < il; i++) {
 			geometry.faces.push(new THREE.Face3(faces[i][0], faces[i][1], faces[i][2]));
-			geometry.faceVertexUvs[0].push([texcoords[faces[i][0]],
-				texcoords[faces[i][1]],
-				texcoords[faces[i][2]]]);
+			geometry.faceVertexUvs[0].push([0, 1, 2].map(function (j) { return texcoords[faces[i][j]]; }));
 		}
-
-		geometry.computeFaceNormals();
 
 		var mesh = new THREE.Mesh(geometry, material);
 
